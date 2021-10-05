@@ -3,6 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var url = require('url');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -23,8 +24,8 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
 // =========================================================
-var forbidden = require('./forbidden');
-app.use('/forbidden', forbidden);
+// var forbidden = require('./forbidden');
+// app.use('/forbidden', forbidden);
 // =========================================================
 app.use(function(req, res, next) {
   if(req.url == '/home') {
@@ -33,6 +34,19 @@ app.use(function(req, res, next) {
     next();
   }
 });
+
+app.use(function(req, res, next) {
+  if(!access(req)) {    
+    res.send('Acctss Denied');
+  } else {   
+    res.send('Access Approved');
+  }
+});
+
+function access(req) {  
+  let parts = url.parse(req.url, true);
+  return parts.query.secret === 'true';
+}
 // =======================================================
 
 // catch 404 and forward to error handler
