@@ -29,7 +29,7 @@ app.use('/users', usersRouter);
 // =========================================================
 app.use(function(req, res, next) {
   if(req.url == '/home') {
-    res.end('Home');
+    res.end('Home page');
   } else {
     next();
   }
